@@ -18,6 +18,7 @@ public class Frame implements ActionListener {
     QuestDB questDB;
     Random random;
     int questionNumber;
+    boolean question;
 
     public Frame() {
         recruiterFrame = new JFrame("Recruiter Questions");
@@ -29,7 +30,6 @@ public class Frame implements ActionListener {
     }
 
     public void frameRun() {
-
         TextCreator textCreator = new TextCreator();
         questionText = textCreator.createTextArea(recruiterFrame);
         ButtonCreator buttonCreator = new ButtonCreator();
@@ -38,17 +38,17 @@ public class Frame implements ActionListener {
         getAnswer = buttonCreator.createButton("Odpowiedź", recruiterFrame, 300, 120);
         getAnswer.addActionListener(this);
         questDB.createQuestionsList();
-
     }
 
     @Override
     public void actionPerformed(ActionEvent e) throws NumberFormatException {
         try {
             if (e.getSource() == getRandomQuestion) {
+                question = true;
                 questionNumber = random.nextInt(questDB.getQuestions().size());
                 questionText.setText(questDB.getQuestions().get(questionNumber).getQuestion());
             }
-            if (e.getSource() == getAnswer) {
+            if (e.getSource() == getAnswer && question) {
                 try {
                     JOptionPane.showMessageDialog(recruiterFrame, questDB.getQuestions().get(questionNumber).getAnswer());
                 } catch (IllegalComponentStateException ei) {
